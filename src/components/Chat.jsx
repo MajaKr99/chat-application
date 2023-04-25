@@ -11,53 +11,52 @@ const Chat = () => {
   const [members, setMembers] = useState({ inRoom: [] });
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const drone = useRef();
+  const drone = useRef(); 
 
-  useEffect(() => {
+  useEffect(() => { 
     drone.current = new window.Scaledrone(channelID, {
-      data: user,
+      data: user, 
     });
 
-    const room = drone.current.subscribe("observable-room");
+    const room = drone.current.subscribe("observable-room"); 
 
-    drone.current.on("open", (error) => {
-      if (error) {
+    drone.current.on("open", (error) => { 
+      if (error) { 
         console.error(error);
       } else {
-        console.log("Connected");
-        const droneState = { ...user };
-        droneState.id = drone.current.clientId;
-        setUser({ droneState });
+        console.log("Connected"); 
+        const droneState = { ...user }; 
+        droneState.id = drone.current.clientId; 
+        setUser({ droneState }); 
       }
     });
 
-    room.on("member_join", (member) => {
-      members.inRoom.push(member);
-      setMembers({ ...members });
+    room.on("member_join", (member) => { 
+      members.inRoom.push(member); 
+      setMembers({ ...members }); 
     });
 
     room.on("member_leave", (member) => {
-      const mems = members.inRoom.filter(
+      const mems = members.inRoom.filter( 
         (memberIndex) => memberIndex.id !== member.id
       );
+      members.inRoom = mems; 
+      setMembers({ ...members }); 
+    });
+
+    room.on("members", (mems) => { 
       members.inRoom = mems;
       setMembers({ ...members });
     });
 
-    room.on("members", (mems) => {
-      members.inRoom = mems;
-      setMembers({ ...members });
-    });
-
-    room.on("message", (message) => {
-      const { data, id, timestamp, member } = message;
-      const time = new Date(timestamp * 1000).toLocaleTimeString("hr-HR");
-      messages.push({ id, member, text: data, time });
-      setMessages([...messages], messages);
+    room.on("message", (message) => { 
+      const { data, id, timestamp, member } = message; 
+      const time = new Date(timestamp * 1000).toLocaleTimeString("hr-HR"); 
+      messages.push({ id, member, text: data, time }); 
+      setMessages([...messages], messages); 
       console.log(messages);
     });
-  }, []);
-
+  }, []); 
   function sendMessage(event) {
     event.preventDefault();
     console.log(drone.current);
@@ -69,7 +68,7 @@ const Chat = () => {
   }
 
   function handleOnChange(event) {
-    setNewMessage(event.target.value);
+    setNewMessage(event.target.value); 
   }
 
   return (
@@ -92,8 +91,8 @@ const Chat = () => {
         <form onSubmit={sendMessage}>
           <div className="input_field_box">
             <input
-              value={newMessage}
-              onChange={handleOnChange}
+              value={newMessage} 
+              onChange={handleOnChange} 
               placeholder="Upišite poruku..."
               className="input_field"
               type="text"
